@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EtudiantRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EtudiantRepository::class)]
@@ -28,16 +30,17 @@ class Etudiant
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photo = null;
 
+    #[ORM\OneToMany(mappedBy: 'etudiant', targetEntity: EtudiantMatiere::class, orphanRemoval: true)]
+    private Collection $etudiantMatieres;
+
+    public function __construct()
+    {
+        $this->etudiantMatieres = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function setId(int $id): static
-    {
-        $this->id = $id;
-
-        return $this;
     }
 
     public function getNom(): ?string
@@ -48,7 +51,6 @@ class Etudiant
     public function setNom(string $nom): static
     {
         $this->nom = $nom;
-
         return $this;
     }
 
@@ -60,7 +62,6 @@ class Etudiant
     public function setPrenom(string $prenom): static
     {
         $this->prenom = $prenom;
-
         return $this;
     }
 
@@ -72,7 +73,6 @@ class Etudiant
     public function setEmail(string $email): static
     {
         $this->email = $email;
-
         return $this;
     }
 
@@ -84,7 +84,6 @@ class Etudiant
     public function setNbreAbsence(int $nbreAbsence): static
     {
         $this->nbreAbsence = $nbreAbsence;
-
         return $this;
     }
 
@@ -96,7 +95,14 @@ class Etudiant
     public function setPhoto(?string $photo): static
     {
         $this->photo = $photo;
-
         return $this;
+    }
+
+    /**
+     * @return Collection<int, EtudiantMatiere>
+     */
+    public function getEtudiantMatieres(): Collection
+    {
+        return $this->etudiantMatieres;
     }
 }

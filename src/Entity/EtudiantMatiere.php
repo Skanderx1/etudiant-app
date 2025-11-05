@@ -13,12 +13,42 @@ class EtudiantMatiere
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\ManyToOne(inversedBy: 'etudiantMatieres')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Etudiant $etudiant = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Matiere $matiere = null;
+
     #[ORM\Column]
-    private ?int $absences = null;
+    private ?int $absences = 0;
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getEtudiant(): ?Etudiant
+    {
+        return $this->etudiant;
+    }
+
+    public function setEtudiant(?Etudiant $etudiant): static
+    {
+        $this->etudiant = $etudiant;
+        return $this;
+    }
+
+    public function getMatiere(): ?Matiere
+    {
+        return $this->matiere;
+    }
+
+    public function setMatiere(?Matiere $matiere): static
+    {
+        $this->matiere = $matiere;
+        return $this;
     }
 
     public function getAbsences(): ?int
@@ -29,7 +59,6 @@ class EtudiantMatiere
     public function setAbsences(int $absences): static
     {
         $this->absences = $absences;
-
         return $this;
     }
 }
