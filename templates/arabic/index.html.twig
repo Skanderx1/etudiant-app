@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}EtudiantMatiere index{% endblock %}
+
+{% block body %}
+    <h1>EtudiantMatiere index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Absences</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for etudiant_matiere in etudiant_matieres %}
+            <tr>
+                <td>{{ etudiant_matiere.id }}</td>
+                <td>{{ etudiant_matiere.absences }}</td>
+                <td>
+                    <a href="{{ path('app_arabic_show', {'id': etudiant_matiere.id}) }}">show</a>
+                    <a href="{{ path('app_arabic_edit', {'id': etudiant_matiere.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_arabic_new') }}">Create new</a>
+{% endblock %}

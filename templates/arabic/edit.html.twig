@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit EtudiantMatiere{% endblock %}
+
+{% block body %}
+    <h1>Edit EtudiantMatiere</h1>
+
+    {{ include('arabic/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_arabic_index') }}">back to list</a>
+
+    {{ include('arabic/_delete_form.html.twig') }}
+{% endblock %}
