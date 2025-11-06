@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Entity;
-
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use App\Repository\EtudiantRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -86,6 +86,23 @@ class Etudiant
         $this->nbreAbsence = $nbreAbsence;
 
         return $this;
+    }
+
+     /**
+     * @var UploadedFile|null
+     * Not mapped to Doctrine - used only for form handling.
+     */
+    private $photoFile;
+
+    public function setPhotoFile(?UploadedFile $file): self
+    {
+        $this->photoFile = $file;
+        return $this;
+    }
+
+    public function getPhotoFile(): ?UploadedFile
+    {
+        return $this->photoFile;
     }
 
     public function getPhoto(): ?string
