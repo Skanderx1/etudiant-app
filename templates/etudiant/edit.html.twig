@@ -1,13 +1,30 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Etudiant{% endblock %}
+{% block title %}Modifier un Étudiant{% endblock %}
 
 {% block body %}
-    <h1>Edit Etudiant</h1>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-warning text-dark d-flex align-items-center justify-content-between">
+                    <h4 class="mb-0">
+                        <i class="bi bi-pencil-square me-2"></i> Modifier l'étudiant
+                    </h4>
+                    <a href="{{ path('app_etudiant_index') }}" class="btn btn-light btn-sm">
+                        <i class="bi bi-arrow-left"></i> Retour à la liste
+                    </a>
+                </div>
 
-    {{ include('etudiant/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('app_etudiant_index') }}">back to list</a>
-
-    {{ include('etudiant/_delete_form.html.twig') }}
+                <div class="card-body">
+                    {{ include('etudiant/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+                    
+                    <div class="mt-4 d-flex justify-content-between">
+                        {{ include('etudiant/_delete_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
