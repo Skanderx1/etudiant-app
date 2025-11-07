@@ -16,11 +16,7 @@ class MatiereType extends AbstractType
         $builder
             ->add('name')
             ->add('maxAbscences')
-            ->add('etudiants', EntityType::class, [
-                'class' => Etudiant::class,
-                'choice_label' => 'id',
-                'multiple' => true,
-            ])
+
         ;
     }
 
@@ -31,3 +27,4 @@ class MatiereType extends AbstractType
         ]);
     }
 }
+

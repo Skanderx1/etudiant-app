@@ -41,6 +41,12 @@ class EtudiantMatiere
         return $this;
     }
 
+    public function incrementAbsences(int $n = 1): static
+    {
+        $this->absences = ($this->absences ?? 0) + $n;
+        return $this;
+    }
+
     public function getEtudiant(): ?Etudiant
     {
         return $this->etudiant;

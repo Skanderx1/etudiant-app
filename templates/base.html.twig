@@ -19,15 +19,38 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
     >
 
-    <!-- ✅ Custom Styles (optional) -->
+    <!-- ✅ SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+
+    <!-- ✅ Custom Styles -->
     <style>
       body {
         background-color: #f8f9fa;
       }
+
       footer {
         margin-top: 40px;
         padding: 20px 0;
         color: #777;
+        background-color: #f1f1f1;
+      }
+
+      .card-shadow {
+        box-shadow: 0 0.25rem 0.75rem rgba(0,0,0,0.1);
+      }
+
+      .btn-floating {
+        position: fixed;
+        bottom: 40px;
+        right: 40px;
+        z-index: 100;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
     </style>
 
@@ -36,7 +59,7 @@
   <body>
 
     <!-- ✅ Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
       <div class="container">
         <a class="navbar-brand fw-bold" href="{{ path('app_etudiant_index') }}">
           <i class="bi bi-mortarboard"></i> Gestion Étudiants
@@ -48,10 +71,19 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
-              <a class="nav-link" href="{{ path('app_etudiant_index') }}">Liste</a>
+              <a class="nav-link" href="{{ path('app_etudiant_index') }}">
+                <i class="bi bi-list"></i> Liste
+              </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ path('app_etudiant_new') }}">Ajouter</a>
+              <a class="nav-link" href="{{ path('app_etudiant_new') }}">
+                <i class="bi bi-plus-circle"></i> Ajouter Étudiant
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ path('app_matiere_new') }}">
+                <i class="bi bi-book"></i> Ajouter Matière
+              </a>
             </li>
           </ul>
         </div>
@@ -62,6 +94,11 @@
     <main class="container mt-5">
       {% block body %}{% endblock %}
     </main>
+
+    <!-- ✅ Floating button to add Matière -->
+    <a href="{{ path('app_matiere_new') }}" class="btn btn-primary btn-floating shadow-lg">
+      <i class="bi bi-book"></i>
+    </a>
 
     <!-- ✅ Footer -->
     <footer class="text-center">
@@ -77,9 +114,35 @@
       crossorigin="anonymous">
     </script>
 
-    <!-- ✅ Custom JS (if needed) -->
+    <!-- ✅ SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+    <!-- ✅ Custom JS -->
     {% block javascripts %}
-      <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/app.js') }}"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: '{{ label }}', // success, error, info, warning
+                    title: "{{ message|e('js') }}",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
+            {% endfor %}
+        {% endfor %}
+    });
+    </script>
     {% endblock %}
+
   </body>
 </html>

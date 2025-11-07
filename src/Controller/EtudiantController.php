@@ -3,7 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Etudiant;
+use App\Entity\EtudiantMatiere;
+use App\Entity\Matiere;
 use App\Form\EtudiantType;
+use App\Form\EtudiantMatiereType;
 use App\Repository\EtudiantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -59,7 +62,7 @@ class EtudiantController extends AbstractController
                 try {
                     $photoFile->move($this->photosDir, $newFilename);
                 } catch (FileException $e) {
-                    $this->addFlash('danger', 'Erreur lors de l’upload de la photo.');
+                    $this->addFlash('warning', 'Erreur lors de l’upload de la photo.');
                     return $this->redirectToRoute('app_etudiant_new');
                 }
 
@@ -107,7 +110,7 @@ class EtudiantController extends AbstractController
                 try {
                     $photoFile->move($this->photosDir, $newFilename);
                 } catch (FileException $e) {
-                    $this->addFlash('danger', 'Erreur lors de l’upload de la photo.');
+                    $this->addFlash('warning', 'Erreur lors de l’upload de la photo.');
                     return $this->redirectToRoute('app_etudiant_edit', ['id' => $etudiant->getId()]);
                 }
 
@@ -128,6 +131,29 @@ class EtudiantController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+#[Route('/{id}/add-matiere', name: 'add_matiere', methods: ['GET', 'POST'])]
+public function addMatiere(Request $request, Etudiant $etudiant): Response
+{
+    $etudiantMatiere = new EtudiantMatiere();
+    $etudiantMatiere->setEtudiant($etudiant);
+
+    $form = $this->createForm(EtudiantMatiereType::class, $etudiantMatiere);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $etudiantMatiere->setAbsences(0);
+        $this->em->persist($etudiantMatiere);
+        $this->em->flush();
+        $this->addFlash('success', 'Matière ajoutée à l’étudiant.');
+        return $this->redirectToRoute('app_etudiant_show', ['id' => $etudiant->getId()]);
+    }
+
+    return $this->render('etudiant/add_matiere.html.twig', [
+        'etudiant' => $etudiant,
+        'form' => $form->createView(),
+    ]);
+}
+
 
     #[Route('/{id}', name: 'delete', methods: ['POST'])]
     public function delete(Request $request, Etudiant $etudiant): Response

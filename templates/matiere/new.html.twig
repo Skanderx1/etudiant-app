@@ -1,11 +1,84 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Matiere{% endblock %}
+{% block title %}Créer une nouvelle Matière{% endblock %}
 
 {% block body %}
-    <h1>Create new Matiere</h1>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
 
-    {{ include('matiere/_form.html.twig') }}
+            <!-- Card wrapper for the form -->
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-gradient-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-book"></i> Créer une nouvelle Matière
+                    </h4>
+                </div>
+                <div class="card-body">
 
-    <a href="{{ path('app_matiere_index') }}">back to list</a>
+                    {{ form_start(form) }}
+
+                    <div class="mb-3">
+                        {{ form_label(form.name) }}
+                        {{ form_widget(form.name, {'attr': {'class': 'form-control', 'placeholder': 'Nom de la matière'}}) }}
+                        {{ form_errors(form.name) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.maxAbscences) }}
+                        {{ form_widget(form.maxAbscences, {'attr': {'class': 'form-control', 'min': 0}}) }}
+                        {{ form_errors(form.maxAbscences) }}
+                    </div>
+
+                    {# Optional: Assign students when creating the matiere #}
+                    {# 
+                    <div class="mb-3">
+                        {{ form_label(form.etudiants) }}
+                        {{ form_widget(form.etudiants, {'attr': {'class': 'form-select', 'multiple': 'multiple'}}) }}
+                        {{ form_errors(form.etudiants) }}
+                    </div> 
+                    #}
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{{ path('app_matiere_index') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Retour à la liste
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-check-circle"></i> Créer
+                        </button>
+                    </div>
+
+                    {{ form_end(form) }}
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{# Toast notification for flash messages #}
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="toast align-items-center text-bg-{{ label }} border-0 position-fixed bottom-0 end-0 m-3" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    {{ message }}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    {% endfor %}
+{% endfor %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+    var toastList = toastElList.map(function (toastEl) {
+        var toast = new bootstrap.Toast(toastEl, { delay: 3000 })
+        toast.show()
+        return toast
+    })
+})
+</script>
 {% endblock %}

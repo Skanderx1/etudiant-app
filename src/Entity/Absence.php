@@ -13,9 +13,8 @@ class Absence
     #[ORM\Column]
     private ?int $id = null;
 
-    // ✅ renamed for consistency with naming standards
     #[ORM\Column(name: "nbre_absences")]
-    private ?int $nbreAbsences = null;
+    private ?int $nbreAbsences = 1; // each record counts as 1 absence
 
     #[ORM\ManyToOne(targetEntity: Etudiant::class, inversedBy: 'absences')]
     #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
