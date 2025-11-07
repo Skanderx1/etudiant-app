@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\MatiereRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MatiereRepository::class)]
@@ -13,83 +15,89 @@ class Matiere
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 100, nullable: true)]
-    private ?string $nom = null;
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
 
-    #[ORM\Column(length: 100, nullable: true)]
-    private ?string $math = null;
+    #[ORM\Column]
+    private ?int $maxAbscences = null;
 
-    #[ORM\Column(length: 200, nullable: true)]
-    private ?string $algorithme = null;
+    /**
+     * @var Collection<int, EtudiantMatiere>
+     */
+    #[ORM\OneToMany(mappedBy: 'matiere', targetEntity: EtudiantMatiere::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $etudiantMatieres;
 
-    #[ORM\Column(length: 200, nullable: true)]
-    private ?string $english = null;
+    /**
+     * @var Collection<int, Absence>
+     */
+    #[ORM\OneToMany(mappedBy: 'matiere', targetEntity: Absence::class, cascade: ['remove'])]
+    private Collection $absences;
 
-    #[ORM\Column(length: 200)]
-    private ?string $arabic = null;
+    public function __construct()
+    {
+        $this->etudiantMatieres = new ArrayCollection();
+        $this->absences = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getName(): ?string
     {
-        return $this->nom;
+        return $this->name;
     }
 
-    public function setNom(?string $nom): static
+    public function setName(string $name): static
     {
-        $this->nom = $nom;
-
+        $this->name = $name;
         return $this;
     }
 
-    public function getMath(): ?string
+    public function getMaxAbscences(): ?int
     {
-        return $this->math;
+        return $this->maxAbscences;
     }
 
-    public function setMath(?string $math): static
+    public function setMaxAbscences(int $maxAbscences): static
     {
-        $this->math = $math;
-
+        $this->maxAbscences = $maxAbscences;
         return $this;
     }
 
-    public function getAlgorithme(): ?string
+    /**
+     * @return Collection<int, EtudiantMatiere>
+     */
+    public function getEtudiantMatieres(): Collection
     {
-        return $this->algorithme;
+        return $this->etudiantMatieres;
     }
 
-    public function setAlgorithme(?string $algorithme): static
+    public function addEtudiantMatiere(EtudiantMatiere $etudiantMatiere): static
     {
-        $this->algorithme = $algorithme;
-
+        if (!$this->etudiantMatieres->contains($etudiantMatiere)) {
+            $this->etudiantMatieres->add($etudiantMatiere);
+            $etudiantMatiere->setMatiere($this);
+        }
         return $this;
     }
 
-    public function getEnglish(): ?string
+    public function removeEtudiantMatiere(EtudiantMatiere $etudiantMatiere): static
     {
-        return $this->english;
-    }
-
-    public function setEnglish(?string $english): static
-    {
-        $this->english = $english;
-
+        if ($this->etudiantMatieres->removeElement($etudiantMatiere)) {
+            if ($etudiantMatiere->getMatiere() === $this) {
+                $etudiantMatiere->setMatiere(null);
+            }
+        }
         return $this;
     }
 
-    public function getArabic(): ?string
+    /**
+     * @return Collection<int, Absence>
+     */
+    public function getAbsences(): Collection
     {
-        return $this->arabic;
-    }
-
-    public function setArabic(string $arabic): static
-    {
-        $this->arabic = $arabic;
-
-        return $this;
+        return $this->absences;
     }
 }

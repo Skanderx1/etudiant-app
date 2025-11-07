@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Absences{% endblock %}
+
+{% block body %}
+<h1>Liste des Absences</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Étudiant</th>
+            <th>Matière</th>
+            <th>Nombre d'absences</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for absence in absences %}
+        <tr>
+            <td>{{ absence.id }}</td>
+            <td>{{ absence.etudiant.nom ~ ' ' ~ absence.etudiant.prenom }}</td>
+            <td>{{ absence.matiere.name }}</td>
+            <td>{{ absence.nbrAbsences }}</td>
+            <td>
+                <a href="{{ path('app_absence_show', {'id': absence.id}) }}" class="btn btn-info btn-sm">Show</a>
+                <a href="{{ path('app_absence_edit', {'id': absence.id}) }}" class="btn btn-warning btn-sm">Edit</a>
+                {{ include('absence/_delete_form.html.twig') }}
+            </td>
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="5">No records found</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ path('app_absence_new') }}" class="btn btn-success">Create new</a>
+{% endblock %}

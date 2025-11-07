@@ -20,13 +20,6 @@
     </div>
 
     <div class="col-md-6">
-        {{ form_label(form.nbreAbsence, null, {'label_attr': {'class': 'form-label fw-semibold'}}) }}
-        {{ form_widget(form.nbreAbsence, {'attr': {'class': 'form-control'}}) }}
-        {{ form_errors(form.nbreAbsence) }}
-    </div>
-
-    {# File input field - the name is photoFile from the form type #}
-    <div class="col-md-6">
         <label class="form-label fw-semibold">Photo</label>
         {{ form_widget(form.photoFile, {'attr': {'class': 'form-control', 'accept': 'image/*', 'id': 'photoFileInput'}}) }}
         {{ form_errors(form.photoFile) }}
@@ -39,7 +32,6 @@
             {% endif %}
         </div>
     </div>
-
 </div>
 
 <div class="mt-4">

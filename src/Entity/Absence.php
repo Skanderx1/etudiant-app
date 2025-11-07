@@ -2,26 +2,26 @@
 
 namespace App\Entity;
 
-use App\Repository\EtudiantMatiereRepository;
+use App\Repository\AbsenceRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: EtudiantMatiereRepository::class)]
-#[ORM\Table(name: 'etudiant_matiere')]
-class EtudiantMatiere
+#[ORM\Entity(repositoryClass: AbsenceRepository::class)]
+class Absence
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $absences = 0;
+    // ✅ renamed for consistency with naming standards
+    #[ORM\Column(name: "nbre_absences")]
+    private ?int $nbreAbsences = null;
 
-    #[ORM\ManyToOne(targetEntity: Etudiant::class, inversedBy: 'etudiantMatieres')]
+    #[ORM\ManyToOne(targetEntity: Etudiant::class, inversedBy: 'absences')]
     #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     private ?Etudiant $etudiant = null;
 
-    #[ORM\ManyToOne(targetEntity: Matiere::class, inversedBy: 'etudiantMatieres')]
+    #[ORM\ManyToOne(targetEntity: Matiere::class, inversedBy: 'absences')]
     #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     private ?Matiere $matiere = null;
 
@@ -30,14 +30,14 @@ class EtudiantMatiere
         return $this->id;
     }
 
-    public function getAbsences(): ?int
+    public function getNbreAbsences(): ?int
     {
-        return $this->absences;
+        return $this->nbreAbsences;
     }
 
-    public function setAbsences(?int $absences): static
+    public function setNbreAbsences(int $nbreAbsences): static
     {
-        $this->absences = $absences;
+        $this->nbreAbsences = $nbreAbsences;
         return $this;
     }
 

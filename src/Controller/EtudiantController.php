@@ -80,17 +80,13 @@ class EtudiantController extends AbstractController
     }
 
     #[Route('/{id}', name: 'show', methods: ['GET'])]
-   /**
- * @Route("/etudiant/{id}", name="app_etudiant_show")
- */
-public function show(Etudiant $etudiant): Response
-{
-    return $this->render('etudiant/show.html.twig', [
-        'etudiant' => $etudiant,
-        'photos_basepath' => '/uploads/photos', 
-    ]);
-}
-
+    public function show(Etudiant $etudiant): Response
+    {
+        return $this->render('etudiant/show.html.twig', [
+            'etudiant' => $etudiant,
+            'photos_basepath' => '/uploads/photos', 
+        ]);
+    }
 
     #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Etudiant $etudiant): Response
@@ -115,7 +111,6 @@ public function show(Etudiant $etudiant): Response
                     return $this->redirectToRoute('app_etudiant_edit', ['id' => $etudiant->getId()]);
                 }
 
-                // delete old one if exists
                 if ($oldPhoto && file_exists($this->photosDir . '/' . $oldPhoto)) {
                     @unlink($this->photosDir . '/' . $oldPhoto);
                 }

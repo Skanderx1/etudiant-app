@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Entity;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use App\Repository\EtudiantRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,11 +25,31 @@ class Etudiant
     #[ORM\Column(length: 100)]
     private ?string $email = null;
 
-    #[ORM\Column]
-    private ?int $nbreAbsence = null;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photo = null;
+
+    /**
+     * Used for file upload only (not persisted)
+     */
+    private ?UploadedFile $photoFile = null;
+
+    /**
+     * @var Collection<int, EtudiantMatiere>
+     */
+    #[ORM\OneToMany(mappedBy: 'etudiant', targetEntity: EtudiantMatiere::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $etudiantMatieres;
+
+    /**
+     * @var Collection<int, Absence>
+     */
+    #[ORM\OneToMany(mappedBy: 'etudiant', targetEntity: Absence::class, cascade: ['remove'])]
+    private Collection $absences;
+
+    public function __construct()
+    {
+        $this->etudiantMatieres = new ArrayCollection();
+        $this->absences = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -36,7 +59,6 @@ class Etudiant
     public function setId(int $id): static
     {
         $this->id = $id;
-
         return $this;
     }
 
@@ -48,7 +70,6 @@ class Etudiant
     public function setNom(string $nom): static
     {
         $this->nom = $nom;
-
         return $this;
     }
 
@@ -60,7 +81,6 @@ class Etudiant
     public function setPrenom(string $prenom): static
     {
         $this->prenom = $prenom;
-
         return $this;
     }
 
@@ -72,27 +92,19 @@ class Etudiant
     public function setEmail(string $email): static
     {
         $this->email = $email;
-
         return $this;
     }
 
-    public function getNbreAbsence(): ?int
+    public function getPhoto(): ?string
     {
-        return $this->nbreAbsence;
+        return $this->photo;
     }
 
-    public function setNbreAbsence(int $nbreAbsence): static
+    public function setPhoto(?string $photo): static
     {
-        $this->nbreAbsence = $nbreAbsence;
-
+        $this->photo = $photo;
         return $this;
     }
-
-     /**
-     * @var UploadedFile|null
-     * Not mapped to Doctrine - used only for form handling.
-     */
-    private $photoFile;
 
     public function setPhotoFile(?UploadedFile $file): self
     {
@@ -105,15 +117,62 @@ class Etudiant
         return $this->photoFile;
     }
 
-    public function getPhoto(): ?string
+    /**
+     * @return Collection<int, EtudiantMatiere>
+     */
+    public function getEtudiantMatieres(): Collection
     {
-        return $this->photo;
+        return $this->etudiantMatieres;
     }
 
-    public function setPhoto(?string $photo): static
+    public function addEtudiantMatiere(EtudiantMatiere $etudiantMatiere): static
     {
-        $this->photo = $photo;
-
+        if (!$this->etudiantMatieres->contains($etudiantMatiere)) {
+            $this->etudiantMatieres->add($etudiantMatiere);
+            $etudiantMatiere->setEtudiant($this);
+        }
         return $this;
+    }
+
+    public function removeEtudiantMatiere(EtudiantMatiere $etudiantMatiere): static
+    {
+        if ($this->etudiantMatieres->removeElement($etudiantMatiere)) {
+            if ($etudiantMatiere->getEtudiant() === $this) {
+                $etudiantMatiere->setEtudiant(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Absence>
+     */
+    public function getAbsences(): Collection
+    {
+        return $this->absences;
+    }
+
+    public function addAbsence(Absence $absence): static
+    {
+        if (!$this->absences->contains($absence)) {
+            $this->absences->add($absence);
+            $absence->setEtudiant($this);
+        }
+        return $this;
+    }
+
+    public function removeAbsence(Absence $absence): static
+    {
+        if ($this->absences->removeElement($absence)) {
+            if ($absence->getEtudiant() === $this) {
+                $absence->setEtudiant(null);
+            }
+        }
+        return $this;
+    }
+
+    public function getTotalAbsences(): int
+    {
+        return $this->absences->count();
     }
 }
