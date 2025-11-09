@@ -71,21 +71,22 @@ class AbsenceController extends AbstractController
         return $this->redirectToRoute('app_etudiant_show', ['id' => $etudiantId]);
     }
 #[Route('/test-email', name: 'app_test_email')]
-public function testEmail(MailerInterface $mailer)
+public function testEmail(MailerInterface $mailer): Response
 {
     $email = (new Email())
-        ->from('feresbhar123@gmail.com')
-        ->to('hayesmave@gmail.com') // you can use yourself
-        ->subject('Test Email')
-        ->text('This is a test email');
+        ->from('9b1a9e001@smtp-brevo.com') 
+        ->to('feresbhar123@gmail.com')
+        ->subject('Test Email Brevo')
+        ->text('This is a test email from Symfony using Brevo SMTP.');
 
     try {
         $mailer->send($email);
-        return new Response('Email sent!');
+        return new Response('Email sent successfully!');
     } catch (\Exception $e) {
         return new Response('Error: ' . $e->getMessage());
     }
 }
+
     #[Route('/notify/{etudiantId}/{matiereId}', name: 'notify', methods: ['POST'])]
     public function notifyStudent(
         int $etudiantId,
